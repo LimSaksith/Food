@@ -85,6 +85,7 @@
   <h2>🛒 កម្មង់របស់អ្នក</h2>
   <ul id="cart-list"></ul>
   <p id="total">សរុប: $0</p>
+  <button onclick="submitOrder()">📤 បញ្ជូនកម្មង់</button>
 
   <h2>💵 បង់ប្រាក់តាម ABA</h2>
   <button id="payBtn" onclick="showQR()">បង្ហាញ ABA QR</button>
@@ -117,6 +118,22 @@
         list.appendChild(li);
       });
       document.getElementById('total').innerText = `សរុប: $${total}`;
+    }
+
+    function submitOrder() {
+      if (cart.length === 0) {
+        alert('សូមជ្រើសរើសម្ហូបមុនបញ្ជូនកម្មង់។');
+        return;
+      }
+      let summary = '📦 កម្មង់ថ្មី៖\n';
+      cart.forEach(entry => {
+        summary += `- ${entry.item} x${entry.qty} = $${entry.price * entry.qty}\n`;
+      });
+      summary += `\n💰 សរុប: $${total}`;
+      const token = 'YOUR_BOT_TOKEN';
+      const chat_id = '@SithEmoji';
+      const url = `https://api.telegram.org/bot${token}/sendMessage?chat_id=${chat_id}&text=${encodeURIComponent(summary)}`;
+      fetch(url).then(() => alert('📬 កម្មង់ត្រូវបានបញ្ជូនទៅ Telegram')).catch(() => alert('❌ បរាជ័យក្នុងការបញ្ជូន'));
     }
 
     function showQR() {
