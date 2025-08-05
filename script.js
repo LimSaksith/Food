@@ -26,10 +26,31 @@ function showQR() {
   document.getElementById('qr-section').style.display = 'block';
 }
 
+function submitOrder() {
+  if (cart.length === 0) {
+    alert('សូមជ្រើសរើសម្ហូបមុនបញ្ជូនកម្មង់។');
+    return;
+  }
+
+  let summary = '📦 កម្មង់ថ្មី៖\n';
+  cart.forEach(entry => {
+    summary += `- ${entry.item} x${entry.qty} = $${entry.price * entry.qty}\n`;
+  });
+  summary += `\n💰 សរុប: $${total}`;
+
+  const token = 'YOUR_BOT_TOKEN';       // 🛠️ ប្ដូរជា Bot Token របស់អ្នក
+  const chat_id = '@SithEmoji';         // 🛠️ ឬ @channelname / ID
+  const url = `https://api.telegram.org/bot${token}/sendMessage?chat_id=${chat_id}&text=${encodeURIComponent(summary)}`;
+
+  fetch(url)
+    .then(() => alert('📬 កម្មង់ត្រូវបានបញ្ជូនទៅ Telegram'))
+    .catch(() => alert('❌ បរាជ័យក្នុងការបញ្ជូន'));
+}
+
 function sendTelegramMessage(item, qty, price) {
   const message = `មានកម្មង់ថ្មី៖ ${item} x${qty} = $${price * qty}`;
-  const token = 'YOUR_BOT_TOKEN'; // ប្ដូរជា Bot Token របស់អ្នក
-  const chat_id = 'YOUR_CHAT_ID'; // ប្ដូរជា Chat ID របស់អ្នក
+  const token = 'YOUR_BOT_TOKEN';      // អាចប្រើដូចខាងលើ
+  const chat_id = 'YOUR_CHAT_ID';      // ឬ @SithEmoji
   const url = `https://api.telegram.org/bot${token}/sendMessage?chat_id=${chat_id}&text=${encodeURIComponent(message)}`;
   fetch(url);
 }
